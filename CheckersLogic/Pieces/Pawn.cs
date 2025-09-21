@@ -33,7 +33,26 @@
             return Board.IsInside(pos) && board.IsEmpty(pos);
         }
 
-        private IEnumerable<Move> DiagonalMoves(Position from, Board board)
+        private bool CanCaptureAt(Position pos, Board board, Direction dir)
+        {
+            return Board.IsInside(pos) && !board.IsEmpty(pos) && board[pos].Color != Color;
+        }
+
+        private IEnumerable<Move> AttackMoves(Position from, Board board)
+        {
+            foreach (Direction dir in forward)
+            {
+                Position to = from + dir;
+                Position landingPos = to + dir;
+
+                if (CanCaptureAt(to, board, dir) && CanMoveTo(landingPos, board))
+                {
+                    yield return new AttackMove(from, landingPos);
+                }
+            }
+        }
+
+        private IEnumerable<Move> NormalMoves(Position from, Board board)
         {
             foreach (Direction dir in forward)
             {
@@ -48,7 +67,11 @@
 
         public override IEnumerable<Move> GetMoves(Position from, Board board)
         {
-            return DiagonalMoves(from, board);
+            IEnumerable<Move> attackMoves = AttackMoves(from, board);
+
+            if (attackMoves.Any()) return attackMoves;
+
+            return NormalMoves(from, board);
         }
     }
 }
