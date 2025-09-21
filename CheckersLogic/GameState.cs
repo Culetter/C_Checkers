@@ -19,13 +19,30 @@
             }
 
             Piece piece = Board[pos];
-            return piece.GetMoves(pos, Board);
+
+            if (!AreAttackMoves(CurrentPlayer))
+            {
+                return piece.GetMoves(pos, Board);
+            }
+
+            return piece.GetMoves(pos, Board).OfType<AttackMove>();
         }
 
         public void MakeMove(Move move)
         {
             move.Execute(Board);
             CurrentPlayer = CurrentPlayer.Opponent();
+        }
+
+        private bool AreAttackMoves(Player player)
+        {
+            IEnumerable<Move> moveCandidates = Board.PiecePositionsFor(player).SelectMany(pos =>
+            {
+                Piece piece = Board[pos];
+                return piece.GetMoves(pos, Board);
+            });
+
+            return moveCandidates.OfType<AttackMove>().Any();
         }
     }
 }
