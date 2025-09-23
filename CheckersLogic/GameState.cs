@@ -6,6 +6,7 @@ namespace CheckersLogic
     {
         public Board Board { get; }
         public Player CurrentPlayer { get; private set; }
+        public Result Result { get; private set; } = null;
 
         public GameState(Player player, Board board)
         {
@@ -34,6 +35,7 @@ namespace CheckersLogic
         {
             move.Execute(Board);
             CurrentPlayer = CurrentPlayer.Opponent();
+            CheckForGameOver();
         }
 
         private bool AreAttackMoves(Player player)
@@ -45,6 +47,19 @@ namespace CheckersLogic
             });
 
             return moveCandidates.Any(move => move.Type == MoveType.Attack);
+        }
+
+        private void CheckForGameOver()
+        {
+            if (!Board.PiecePositionsFor(CurrentPlayer).Any())
+            {
+                Result = Result.Win(CurrentPlayer.Opponent());
+            }
+        }
+
+        public bool IsGameOver()
+        {
+            return Result != null;
         }
     }
 }

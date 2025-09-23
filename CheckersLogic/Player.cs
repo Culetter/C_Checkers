@@ -3,7 +3,8 @@
     public enum Player
     {
         White,
-        Black
+        Black,
+        None
     }
 
     public static class PlayerExtentions
@@ -13,7 +14,8 @@
             return player switch
             {
                 Player.White => Player.Black,
-                _ => Player.White,
+                Player.Black => Player.White,
+                _ => Player.None
             };
         }
     }

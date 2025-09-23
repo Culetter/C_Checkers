@@ -31,6 +31,7 @@ namespace CheckersUI
 
             gameState = new GameState(Player.White, Board.Initial());
             DrawBoard(gameState.Board);
+            SetCursor(gameState.CurrentPlayer);
         }
 
         private void InitializeBoard()
@@ -64,6 +65,11 @@ namespace CheckersUI
 
         private void BoardGrid_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            if (IsMenuOnScreen())
+            {
+                return;
+            }
+
             Point point = e.GetPosition(BoardGrid);
             Position pos = ToSquarePosition(point);
 
@@ -112,6 +118,12 @@ namespace CheckersUI
         {
             gameState.MakeMove(move);
             DrawBoard(gameState.Board);
+            SetCursor(gameState.CurrentPlayer);
+
+            if (gameState.IsGameOver())
+            {
+                ShowGameOver();
+            }
         }
 
         private void CacheMoves(IEnumerable<Move> moves)
@@ -140,6 +152,48 @@ namespace CheckersUI
             {
                 highlights[to.Row, to.Column].Fill = Brushes.Transparent;
             }
+        }
+
+        private void SetCursor(Player player)
+        {
+            if (player == Player.White)
+            {
+                Cursor = CheckersCursors.WhiteCursor;
+            }
+            else
+            {
+                Cursor = CheckersCursors.BlackCursor;
+            }
+        }
+
+        private bool IsMenuOnScreen()
+        {
+            return MenuContainer.Content != null;
+        }
+
+        private void ShowGameOver()
+        {
+            GameOverMenu gameOverMenu = new GameOverMenu(gameState);
+            MenuContainer.Content = gameOverMenu;
+
+            gameOverMenu.OptionSelected += option =>
+            {
+                if (option == Option.Restart)
+                {
+                    MenuContainer.Content = null;
+                    RestartGame();
+                }
+                else Application.Current.Shutdown();
+            };
+        }
+
+        private void RestartGame()
+        {
+            HideHighLights();
+            moveCache.Clear();
+            gameState = new GameState(Player.White, Board.Initial());
+            DrawBoard(gameState.Board);
+            SetCursor(gameState.CurrentPlayer);
         }
     }
 }
