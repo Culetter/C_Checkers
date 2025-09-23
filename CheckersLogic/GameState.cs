@@ -1,4 +1,6 @@
-﻿namespace CheckersLogic
+﻿using CheckersLogic;
+
+namespace CheckersLogic
 {
     public class GameState
     {

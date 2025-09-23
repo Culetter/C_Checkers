@@ -1,4 +1,6 @@
-﻿namespace CheckersLogic
+﻿using CheckersLogic;
+
+namespace CheckersLogic
 {
     public class Pawn : Piece
     {
@@ -44,6 +46,19 @@
             return Board.IsInside(pos) && !board.IsEmpty(pos) && board[pos].Color != Color;
         }
 
+        private IEnumerable<Move> NormalMoves(Position from, Board board)
+        {
+            foreach (Direction dir in forward)
+            {
+                Position to = from + dir;
+
+                if (CanMoveTo(to, board))
+                {
+                    if (to.Row == 0 || to.Row == 7) yield return new NormalPromotion(from, to);
+                    else yield return new NormalMove(from, to);
+                }
+            }
+        }
 
         private IEnumerable<Move> AttackMoves(Position from, Board board)
         {
@@ -76,21 +91,9 @@
 
                     if (!hasCaptured)
                     {
-                        yield return new AttackMove(originalFrom, landing, newCaptured);
+                        if (landing.Row == 0 || landing.Row == 7) yield return new AttackPromotion(originalFrom, landing, newCaptured);
+                        else yield return new AttackMove(originalFrom, landing, newCaptured);
                     }
-                }
-            }
-        }
-
-        private IEnumerable<Move> NormalMoves(Position from, Board board)
-        {
-            foreach (Direction dir in forward)
-            {
-                Position to = from + dir;
-
-                if (CanMoveTo(to, board))
-                {
-                    yield return new NormalMove(from, to);
                 }
             }
         }
