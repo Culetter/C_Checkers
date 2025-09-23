@@ -27,7 +27,7 @@ namespace CheckersLogic
                 return piece.GetMoves(pos, Board);
             }
 
-            return piece.GetMoves(pos, Board).OfType<AttackMove>();
+            return piece.GetMoves(pos, Board).Where(move => move.Type == MoveType.Attack);
         }
 
         public void MakeMove(Move move)
@@ -44,7 +44,7 @@ namespace CheckersLogic
                 return piece.GetMoves(pos, Board);
             });
 
-            return moveCandidates.OfType<AttackMove>().Any();
+            return moveCandidates.Any(move => move.Type == MoveType.Attack);
         }
     }
 }

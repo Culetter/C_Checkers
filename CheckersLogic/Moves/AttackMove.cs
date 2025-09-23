@@ -5,7 +5,7 @@
         public override MoveType Type => MoveType.Attack;
         public override Position FromPos { get; }
         public override Position ToPos { get; }
-        public List<Position> Captured { get; }
+        protected List<Position> Captured { get; }
 
         public AttackMove(Position from, Position to, List<Position> captured)
         {

@@ -5,13 +5,13 @@ namespace CheckersLogic
     {
         public override PieceType Type => PieceType.Queen;
         public override Player Color { get; }
-        private static readonly Direction[] dirs = new Direction[]
-        {
+        protected override Direction[] Forward { get; } =
+        [
             Direction.NorthWest,
             Direction.NorthEast,
             Direction.SouthWest,
             Direction.SouthEast
-        };
+        ];
 
         public Queen(Player color)
         {
@@ -22,11 +22,6 @@ namespace CheckersLogic
         {
             Queen copy = new Queen(Color);
             return copy;
-        }
-
-        public override IEnumerable<Move> GetMoves(Position from, Board board)
-        {
-            throw new NotImplementedException();
         }
     }
 }

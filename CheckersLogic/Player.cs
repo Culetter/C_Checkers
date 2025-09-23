@@ -2,7 +2,6 @@
 {
     public enum Player
     {
-        None,
         White,
         Black
     }
@@ -14,8 +13,7 @@
             return player switch
             {
                 Player.White => Player.Black,
-                Player.Black => Player.White,
-                _ => Player.None
+                _ => Player.White,
             };
         }
     }
