@@ -28,27 +28,62 @@
             }
         }
 
+        public override Piece Copy()
+        {
+            Pawn copy = new Pawn(Color);
+            return copy;
+        }
+
         private static bool CanMoveTo(Position pos, Board board)
         {
             return Board.IsInside(pos) && board.IsEmpty(pos);
         }
 
-        private bool CanCaptureAt(Position pos, Board board, Direction dir)
+        private bool CanCaptureAt(Position pos, Board board)
         {
             return Board.IsInside(pos) && !board.IsEmpty(pos) && board[pos].Color != Color;
         }
 
+
         private IEnumerable<Move> AttackMoves(Position from, Board board)
         {
+            foreach (Move move in GetAttackChains(from, from, board, new List<Position>()))
+            {
+                yield return move;
+            }
+        }
+
+        private IEnumerable<Move> GetAttackChains(Position originalFrom, Position currentFrom, Board board, List<Position> captured)
+        {
+            bool hasCaptured = false;
             foreach (Direction dir in forward)
             {
-                Position to = from + dir;
-                Position landingPos = to + dir;
-
-                if (CanCaptureAt(to, board, dir) && CanMoveTo(landingPos, board))
+                Position target = currentFrom + dir;
+                Position landing = target + dir;
+                if (CanCaptureAt(target, board) && CanMoveTo(landing, board))
                 {
-                    yield return new AttackMove(from, landingPos);
+                    Board tempBoard = board.Copy();
+                    tempBoard[target] = null;
+                    tempBoard[landing] = tempBoard[currentFrom];
+                    tempBoard[currentFrom] = null;
+                    List<Position> newCaptured = new List<Position>(captured) { target };
+
+                    foreach (Move chain in GetAttackChains(originalFrom, landing, tempBoard, newCaptured))
+                    {
+                        hasCaptured = true;
+                        yield return chain;
+                    }
+
+                    if (!hasCaptured)
+                    {
+                        yield return new AttackMove(originalFrom, landing, newCaptured);
+                    }
                 }
+            }
+
+            if (!hasCaptured && captured.Count > 0)
+            {
+                yield return new AttackMove(originalFrom, currentFrom, captured);
             }
         }
 

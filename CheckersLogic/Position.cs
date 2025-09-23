@@ -12,11 +12,6 @@ namespace CheckersLogic
             Column = column;
         }
 
-        public static Position GetMiddleCell(Position pos1, Position pos2)
-        {
-            return new Position((pos1.Row + pos2.Row) / 2, (pos1.Column + pos2.Column) / 2);
-        }
-
         public override bool Equals(object obj)
         {
             return obj is Position position &&

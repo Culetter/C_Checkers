@@ -68,5 +68,17 @@
         {
             return PiecePosition().Where(pos => this[pos].Color == player);
         }
+
+        public Board Copy()
+        {
+            Board copy = new Board();
+
+            foreach (Position pos in PiecePosition())
+            {
+                copy[pos] = this[pos].Copy();
+            }
+
+            return copy;
+        }
     }
 }

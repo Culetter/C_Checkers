@@ -4,7 +4,7 @@
     {
         public abstract PieceType Type { get; }
         public abstract Player Color { get; }
-        public bool CanAttack { get; set; } = false;
+        public abstract Piece Copy();
         public abstract IEnumerable<Move> GetMoves(Position from, Board board);
     }
 }

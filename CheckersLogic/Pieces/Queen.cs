@@ -18,6 +18,12 @@ namespace CheckersLogic
             Color = color;
         }
 
+        public override Piece Copy()
+        {
+            Queen copy = new Queen(Color);
+            return copy;
+        }
+
         public override IEnumerable<Move> GetMoves(Position from, Board board)
         {
             throw new NotImplementedException();
