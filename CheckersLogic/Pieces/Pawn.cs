@@ -80,11 +80,6 @@
                     }
                 }
             }
-
-            if (!hasCaptured && captured.Count > 0)
-            {
-                yield return new AttackMove(originalFrom, currentFrom, captured);
-            }
         }
 
         private IEnumerable<Move> NormalMoves(Position from, Board board)
