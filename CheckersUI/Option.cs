@@ -4,6 +4,8 @@
     {
         Restart,
         Exit,
-        Continue
+        Continue,
+        Yes,
+        No
     }
 }

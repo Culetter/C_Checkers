@@ -23,6 +23,7 @@ namespace CheckersUI
 
         private GameState gameState;
         private Position selectedPos = null;
+        private DrawMenu drawMenu;
 
         public MainWindow()
         {
@@ -120,7 +121,16 @@ namespace CheckersUI
             DrawBoard(gameState.Board);
             SetCursor(gameState.CurrentPlayer);
 
-            if (gameState.IsGameOver())
+            if (!gameState.IsGameOver()) return;
+
+            if (gameState.Result.Reason == EndReason.InsufficientMaterial)
+            {
+                if (!DrawMenu.IsAsked)
+                {
+                    ShowDrawMenu();
+                }
+            }
+            else
             {
                 ShowGameOver();
             }
@@ -189,6 +199,7 @@ namespace CheckersUI
 
         private void RestartGame()
         {
+            DrawMenu.IsAsked = false;
             selectedPos = null;
             HideHighLights();
             moveCache.Clear();
@@ -216,6 +227,22 @@ namespace CheckersUI
 
                 if (option == Option.Restart) 
                     RestartGame();
+            };
+        }
+
+        private void ShowDrawMenu()
+        {
+            drawMenu = new DrawMenu();
+            MenuContainer.Content = drawMenu;
+
+            drawMenu.OptionSelected += option =>
+            {
+                MenuContainer.Content = null;
+
+                if (option == Option.Yes)
+                {
+                    ShowGameOver();
+                }
             };
         }
     }

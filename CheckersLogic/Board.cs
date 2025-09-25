@@ -48,7 +48,7 @@
             return this[pos] == null;
         }
 
-        public IEnumerable<Position> PiecePosition()
+        public IEnumerable<Position> PiecePositions()
         {
             for (int r = 0; r < 8; r++)
             {
@@ -66,19 +66,49 @@
 
         public IEnumerable<Position> PiecePositionsFor(Player player)
         {
-            return PiecePosition().Where(pos => this[pos].Color == player);
+            return PiecePositions().Where(pos => this[pos].Color == player);
         }
 
         public Board Copy()
         {
             Board copy = new Board();
 
-            foreach (Position pos in PiecePosition())
+            foreach (Position pos in PiecePositions())
             {
                 copy[pos] = this[pos].Copy();
             }
 
             return copy;
+        }
+
+        public Counting CountPieces()
+        {
+            Counting counting = new Counting();
+
+            foreach (Position pos in PiecePositions())
+            {
+                Piece piece = this[pos];
+                counting.Increment(piece.Color, piece.Type);
+            }
+
+            return counting;
+        }
+
+        public bool InsufficientMaterial()
+        {
+            Counting counting = CountPieces();
+
+            return IsThereNoPawns(counting) && IsEqualQueens(counting);
+        }
+
+        private bool IsThereNoPawns(Counting counting)
+        {
+            return counting.White(PieceType.Pawn) == 0 && counting.Black(PieceType.Pawn) == 0;
+        }
+
+        private bool IsEqualQueens(Counting counting)
+        {
+            return counting.White(PieceType.Queen) == counting.Black(PieceType.Queen);
         }
     }
 }
