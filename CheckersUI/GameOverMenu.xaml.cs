@@ -33,8 +33,8 @@ namespace CheckersUI
         {
             return player switch
             {
-                Player.White => "WHITE'S",
-                Player.Black => "BLACK'S",
+                Player.White => "white's",
+                Player.Black => "black's",
                 _ => ""
             };
         }
