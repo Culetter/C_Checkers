@@ -14,7 +14,7 @@
             Captured = captured;
         }
 
-        public override void Execute(Board board)
+        public override bool Execute(Board board)
         {
             Piece piece = board[FromPos];
             board[FromPos] = null;
@@ -24,6 +24,8 @@
             {
                 board[pos] = null;
             }
+
+            return true;
         }
     }
 }

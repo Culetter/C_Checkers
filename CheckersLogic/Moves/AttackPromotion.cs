@@ -4,7 +4,7 @@
     {
         public AttackPromotion(Position from, Position to, List<Position> captured) : base(from, to, captured) { }
 
-        public override void Execute(Board board)
+        public override bool Execute(Board board)
         {
             Piece pawn = board[FromPos];
             board[FromPos] = null;
@@ -15,6 +15,8 @@
 
             Piece promotionPiece = new Queen(pawn.Color);
             board[ToPos] = promotionPiece;
+
+            return true;
         }
     }
 }

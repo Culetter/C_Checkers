@@ -11,11 +11,13 @@
             ToPos = to;
         }
 
-        public override void Execute(Board board)
+        public override bool Execute(Board board)
         {
             Piece piece = board[FromPos];
             board[ToPos] = piece;
             board[FromPos] = null;
+
+            return piece.Type == PieceType.Pawn;
         }
     }
 }
